@@ -5,6 +5,7 @@ import Logo from '../../assets/logo.png';
 import {Store} from '../../store/context';
 import ParamGroup from '../form';
 import Home from '../home';
+import ScrollList from '../scroll-list';
 
 interface TopNavLayoutProps {}
 
@@ -12,6 +13,7 @@ const { Header, Content, Sider } = Layout;
 const MenuContentMap: Record<string, ReactNode> = {
 	form: <ParamGroup />,
 	home: <Home />,
+	'scroll-list': <ScrollList />,
 };
 const TopNavLayout: FC<TopNavLayoutProps> = props => {
 	const context = useContext(Store);
@@ -65,7 +67,7 @@ const TopNavLayout: FC<TopNavLayoutProps> = props => {
 							justifyContent: 'center'
 						}}
 					>
-						{MenuContentMap[context.defaultPath]}
+						{MenuContentMap[context.defaultPath] ?? null}
 					</Content>
 				</Layout>
 			</Layout>

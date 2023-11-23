@@ -5,12 +5,14 @@ import {MenuList} from '../../constant';
 import Logo from '../../assets/logo.png';
 import ParamGroup from '../form';
 import Home from '../home';
+import ScrollList from '../scroll-list';
 
 interface LeftNavLayoutProps {}
 
 const MenuContentMap: Record<string, ReactNode> = {
 	form: <ParamGroup />,
 	home: <Home />,
+	'scroll-list': <ScrollList />,
 };
 const { Header, Content, Sider } = Layout;
 const LeftNavLayout: FC<LeftNavLayoutProps> = props => {
@@ -65,7 +67,7 @@ const LeftNavLayout: FC<LeftNavLayoutProps> = props => {
 							minHeight: 280,
 						}}
 					>
-						{MenuContentMap[context.defaultPath]}
+						{MenuContentMap[context.defaultPath] ?? null}
 					</Content>
 				</Layout>
 			</Layout>

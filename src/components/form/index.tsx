@@ -8,10 +8,10 @@ interface FormProps {
 
 const ParamGroup: FC<FormProps> = props => {
 	const context = useContext(Store);
-	const [formData, setFormData] = useState<Record<string, unknown> | null>(null);
-	const onFinish = useCallback((value: { props: Array<{ key: string; value: string }> }) => {
-		const curValue = value.props.reduce((pre: Record<string, string>, item) => ({ ...pre, [item.key]: item.value }), {});
-		setFormData(curValue);
+	const [formData, setFormData] = useState<any>(null);
+	const onFinish = useCallback((value: { props: Array<{ prop: string; value: string }> }) => {
+		const curValue = value.props.reduce((pre: Record<string, string>, item) => ({ ...pre, [item.prop]: item.value }), {});
+		setFormData(value.props);
 		context.setContext({ list: [...context.list, curValue] });
 	}, []);
 	return (
@@ -31,7 +31,7 @@ const ParamGroup: FC<FormProps> = props => {
 								<Space key={key} style={{display: 'flex', marginBottom: 8}} align="baseline">
 									<Form.Item
 										{...restField}
-										name={[name, 'key']}
+										name={[name, 'prop']}
 										rules={[{required: true, message: '属性名称必填'}, { pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: '不符合 JS 对象属性规范' }]}
 									>
 										<Input placeholder="属性名称"/>
