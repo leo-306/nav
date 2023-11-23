@@ -1,5 +1,6 @@
-import React, {FC, ReactNode, useCallback, useContext, useMemo} from 'react';
+import React, {FC, ReactNode, useCallback, useContext, useMemo, useState} from 'react';
 import {Avatar, Breadcrumb, Layout, Menu, Typography} from 'antd';
+import {MenuFoldOutlined, MenuUnfoldOutlined} from '@ant-design/icons';
 import {MenuList} from '../../constant';
 import Logo from '../../assets/logo.png';
 import {Store} from '../../store/context';
@@ -17,6 +18,7 @@ const MenuContentMap: Record<string, ReactNode> = {
 };
 const TopNavLayout: FC<TopNavLayoutProps> = props => {
 	const context = useContext(Store);
+	const [collapsed, setCollapsed] = useState(false);
 	const breadcrumbItems = useMemo(() => {
 		return [{ title: '当前路由：' + MenuList.find(item => item.key === context.defaultPath)?.label ?? '-' }];
 	}, [context]);
@@ -46,14 +48,20 @@ const TopNavLayout: FC<TopNavLayoutProps> = props => {
 			) : null}
 			<Layout>
 				{context.showMenu ? (
-					<Sider width={200}>
+					<Sider width={200} collapsed={collapsed}>
 						<Menu
 							mode="inline"
 							defaultSelectedKeys={[context.defaultPath]}
 							onSelect={onSelectMenu}
-							style={{ height: '100%', borderRight: 0, background: '#fff' }}
+							style={{ height: 'calc(100% - 40px)', borderRight: 0, background: '#fff' }}
 							items={MenuList}
 						/>
+						<div
+							onClick={() => setCollapsed(!collapsed)}
+							style={{ height: '40px', cursor: 'pointer', background: '#fff', color: context.theme, fontSize: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+						>
+							{collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+						</div>
 					</Sider>
 				) : null}
 				<Layout style={{ padding: '0 24px 24px' }}>
@@ -64,7 +72,8 @@ const TopNavLayout: FC<TopNavLayoutProps> = props => {
 							margin: 0,
 							minHeight: 280,
 							display: 'flex',
-							justifyContent: 'center'
+							justifyContent: 'center',
+							overflow: 'auto',
 						}}
 					>
 						{MenuContentMap[context.defaultPath] ?? null}

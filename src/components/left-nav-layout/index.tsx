@@ -1,5 +1,6 @@
-import React, {FC, ReactNode, useCallback, useContext, useMemo} from 'react';
+import React, {FC, ReactNode, useCallback, useContext, useMemo, useState} from 'react';
 import {Avatar, Breadcrumb, Layout, Menu, Typography} from 'antd';
+import {MenuFoldOutlined, MenuUnfoldOutlined} from '@ant-design/icons';
 import {Store} from '../../store/context';
 import {MenuList} from '../../constant';
 import Logo from '../../assets/logo.png';
@@ -17,6 +18,7 @@ const MenuContentMap: Record<string, ReactNode> = {
 const { Header, Content, Sider } = Layout;
 const LeftNavLayout: FC<LeftNavLayoutProps> = props => {
 	const context = useContext(Store);
+	const [collapsed, setCollapsed] = useState(false);
 	const breadcrumbItems = useMemo(() => {
 		return [{ title: '当前路由：' + MenuList.find(item => item.key === context.defaultPath)?.label ?? '-' }];
 	}, [context]);
@@ -28,21 +30,30 @@ const LeftNavLayout: FC<LeftNavLayoutProps> = props => {
 		<Layout>
 			<Layout>
 				{context.showMenu ? (
-					<Sider width={200}>
-						<div style={{ display: 'flex', alignItems: 'center', margin: '12px' }}>
+					<Sider width={200} collapsed={collapsed}>
+						<div style={{ display: 'flex', alignItems: 'center', margin: '12px', whiteSpace: 'nowrap', justifyContent: 'center', flexWrap: 'nowrap' }}>
 							<Avatar size="large" src={Logo} />
-							<Typography.Title style={{ color: '#fff', marginTop: 0, marginLeft: '16px', marginBottom: 0 }} level={5}>
-								中信管理后台
-							</Typography.Title>
+							{collapsed ? null : (
+								<Typography.Title style={{ color: '#fff', marginTop: 0, marginLeft: '16px', marginBottom: 0 }} level={5}>
+									中信管理后台
+								</Typography.Title>
+							)}
 						</div>
 						<Menu
 							theme="dark"
 							mode="inline"
 							defaultSelectedKeys={[context.defaultPath]}
 							onSelect={onSelectMenu}
-							style={{ height: '100%', borderRight: 0, background: '#101010' }}
+							style={{ height: 'calc(100% - 104px)', borderRight: 0, background: '#101010' }}
 							items={MenuList}
 						/>
+
+						<div
+							onClick={() => setCollapsed(!collapsed)}
+							style={{ height: '40px', cursor: 'pointer', background: '#101010', color: context.theme, fontSize: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+						>
+							{collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+						</div>
 					</Sider>
 				) : null}
 				<Layout style={{ padding: '0' }}>
@@ -65,6 +76,9 @@ const LeftNavLayout: FC<LeftNavLayoutProps> = props => {
 							padding: 24,
 							margin: 0,
 							minHeight: 280,
+							display: 'flex',
+							justifyContent: 'center',
+							overflow: 'auto',
 						}}
 					>
 						{MenuContentMap[context.defaultPath] ?? null}

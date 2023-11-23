@@ -1,5 +1,5 @@
-import React, {FC, useCallback, useContext, useState} from 'react';
-import {Button, Card, Form, Input, Space, Typography} from 'antd';
+import React, {FC, useCallback, useContext, useState, useEffect} from 'react';
+import {Button, Card, Form, Input, message, Space, Typography} from 'antd';
 import {MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
 import {Store} from '../../store/context';
 
@@ -8,11 +8,18 @@ interface FormProps {
 
 const ParamGroup: FC<FormProps> = props => {
 	const context = useContext(Store);
+	const [form] = Form.useForm();
 	const [formData, setFormData] = useState<any>(null);
 	const onFinish = useCallback((value: { props: Array<{ prop: string; value: string }> }) => {
 		const curValue = value.props.reduce((pre: Record<string, string>, item) => ({ ...pre, [item.prop]: item.value }), {});
 		setFormData(value.props);
 		context.setContext({ list: [...context.list, curValue] });
+		form.setFieldsValue({ props: [{ prop: '', value: '' }, { prop: '', value: '' }] });
+		message.success('提交成功，可前往数据展示页查看')
+	}, [context]);
+
+	useEffect(() => {
+		form.setFieldsValue({ props: [{ prop: '', value: '' }, { prop: '', value: '' }] });
 	}, []);
 	return (
 		<div>
@@ -20,6 +27,7 @@ const ParamGroup: FC<FormProps> = props => {
 				数据录入表单
 			</Typography.Title>
 			<Form
+				form={form}
 				onFinish={onFinish}
 				style={{width: 400}}
 				autoComplete="off"
