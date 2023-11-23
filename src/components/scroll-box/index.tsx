@@ -7,7 +7,9 @@ interface ScrollBoxProps {
 	list: Array<{ name: string; time_delayed: number }>;
 }
 
-const MAX_HEIGHT = 276;
+const MAX_HEIGHT = 264;
+/** 多渲染 13 个元素，用于无线滚动 */
+const LEN = 12;
 const ScrollBox: FC<ScrollBoxProps> = props => {
 	const { title, list, pause } = props;
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -16,12 +18,16 @@ const ScrollBox: FC<ScrollBoxProps> = props => {
 	const isHover = useRef(false);
 	const timer = useRef<any>(null);
 	const top = useRef(0);
-	const [height, setHeight] = useState(0);
+	const height = useRef(0);
 
 	const animation = useCallback(() => {
 		timer.current = window.requestAnimationFrame(() => {
 			if (scrollContainerRef.current) {
 				top.current = top.current + 0.5;
+				/** 22 是每个元素的高 */
+				if (top.current === list.length * 22) {
+					top.current = 0;
+				}
 				scrollContainerRef.current!.scrollTop = top.current;
 				animation();
 			}
@@ -33,7 +39,7 @@ const ScrollBox: FC<ScrollBoxProps> = props => {
 				scroll.current = true;
 				animation();
 			}
-			setHeight(ref.clientHeight);
+			height.current = ref.clientHeight;
 		}
 	}, []);
 	const onMouseEnter = useCallback(() => {
@@ -62,7 +68,6 @@ const ScrollBox: FC<ScrollBoxProps> = props => {
 			animation();
 		}
 		return () => {
-			console.log(1111111);
 			window.cancelAnimationFrame(timer.current);
 		};
 	}, []);
@@ -70,13 +75,13 @@ const ScrollBox: FC<ScrollBoxProps> = props => {
 	return (
 		<Card
 			title={title}
-			style={{ width: 350, height: 380 }}
+			style={{ width: 350, height: 368 }}
 			onMouseEnter={scroll && pause ? onMouseEnter : undefined}
 			onMouseLeave={scroll && pause ? onMouseLeave : undefined}
 		>
 			<div ref={scrollContainerRef} style={{ maxHeight: `${MAX_HEIGHT}px`, cursor: scroll && pause ? 'pointer' : 'default', overflow: 'hidden' }}>
 				<div ref={handleContainerRef} onClick={scroll && pause ? onClickPause : undefined}>
-					{list.map((item, index) => {
+					{[...list, ...list.slice(0, 12)].map((item, index) => {
 						return (
 							<div key={index} style={{ display: 'flex', justifyContent: 'center' }}>
 								<span style={{ flex: 1, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{item.name}</span>
