@@ -31,7 +31,7 @@ const TopNavLayout: FC<TopNavLayoutProps> = props => {
 					<div style={{ display: 'flex', alignItems: 'center' }}>
 						<Avatar size="large" src={Logo} />
 						<Typography.Title style={{ color: '#fff', marginTop: 0, marginLeft: '16px', marginBottom: 0 }} level={3}>
-							{/*中信管理后台*/}
+							中信管理后台
 						</Typography.Title>
 					</div>
 					<div style={{ display: 'flex', alignItems: 'center' }}>

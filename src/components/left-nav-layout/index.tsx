@@ -32,7 +32,7 @@ const LeftNavLayout: FC<LeftNavLayoutProps> = props => {
 						<div style={{ display: 'flex', alignItems: 'center', margin: '12px' }}>
 							<Avatar size="large" src={Logo} />
 							<Typography.Title style={{ color: '#fff', marginTop: 0, marginLeft: '16px', marginBottom: 0 }} level={5}>
-								{/*中信管理后台*/}
+								中信管理后台
 							</Typography.Title>
 						</div>
 						<Menu
