@@ -17,3 +17,18 @@ export const MenuList = [
 		label: '滚动演示',
 	}
 ];
+
+export const INIT_LIST = [
+	{
+		name: '张三',
+		age: 18,
+		deposit: 10000,
+		gender: '男'
+	},
+	{
+		name: '李四',
+		age: 25,
+		deposit: 20000,
+		gender: '男'
+	}
+];
